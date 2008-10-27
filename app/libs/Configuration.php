@@ -67,16 +67,15 @@ class PhpBURN_Configuration {
 	public static function getPackages() {
 		return self::$packages;
 	}
-	
-	public function getConfig($package = null) {
-		if($package == null) {
-			return self::$options;
-		} else {
-			$arrPackage = explode('.',$package);
-			$package = count($arrPackage) > 0 ? $arrPackage[0] : $package;
-			return self::$options[$package];
-		}
+
+	public static function getConfig($package = null) {
+		if ($package == null)
+			return self::getPackages();
+		else
+			if (isset(self::$packages[$package]))
+				return self::$packages[$package];
+
+		return false;
 	}
 }
-
 ?>

@@ -41,7 +41,7 @@ class PhpBURN_Connection {
 			return self::$connections[$package];
 		else {
 			PhpBURN::load('Configuration');
-			$configObj = PhpBURN_Configuration::$options['packages'][$package];
+			$configObj = PhpBURN_Configuration::getConfig($package);
 			self::create($configObj);
 		}
 	}
