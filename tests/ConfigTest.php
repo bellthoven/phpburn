@@ -64,4 +64,39 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		require('../example_application/config.php');
 		$this->assertEquals(3306, $thisConfig['port']);
 	}
+
+	function testIfExistsHostKeyInConfigVariable() {
+		require('../example_application/config.php');
+		$this->assertArrayHasKey('host', $thisConfig);
+	}
+	
+	function testIfContentOfAttributeHostIsLocalhost() {
+		require('../example_application/config.php');
+		$this->assertEquals('localhost', $thisConfig['host']);
+	}
+	
+	function testIfExistsClassPathKeyInConfigVariable() {
+		require('../example_application/config.php');
+		$this->assertArrayHasKey('class_path', $thisConfig);
+	}
+	
+	function testIfContentOfAttributeClassPathIsAPath() {
+		require('../example_application/config.php');
+		$this->assertEquals('/home/cairo/Workspace/phpburn/example_application/model/', $thisConfig['class_path']);
+	}
+	
+	function testIfExistsOptionsInConfigVariable() {
+		require('../example_application/config.php');
+		$this->assertArrayHasKey('options', $thisConfig);
+	}
+	
+	function testIfContentOfAttributeOptionIsArray() {
+		require('../example_application/config.php');
+		$this->assertType('array', $thisConfig['options']);
+	}
+	
+	function testIfExistsPackagesKeyInConfigVariable() {
+		require('../example_application/config.php');
+		$this->assertArrayHasKey('packages', $thisConfig);
+	}
 }

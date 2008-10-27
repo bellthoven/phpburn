@@ -1,8 +1,8 @@
 <?php
 PhpBURN::load('Configuration.ConfigurationItem');
 class PhpBURN_Configuration {
-	
-	public static $options = array();
+
+	public static $packages = array();
 	private $connection = null;
 	
 	public function __construct(array $options) {
@@ -60,8 +60,12 @@ class PhpBURN_Configuration {
 		 */
 		foreach($options['packages'] as $key => $value) {
 			$key = is_array($value) ? $key : $value;
-			self::$options[$key] = new PhpBURN_ConfigurationItem($key,$value,$options);
+			self::$packages[$key] = new PhpBURN_ConfigurationItem($key,$value,$options);
 		}
+	}
+	
+	public static function getPackages() {
+		return self::$packages;
 	}
 	
 	public function getConfig($package = null) {

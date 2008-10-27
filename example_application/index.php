@@ -1,9 +1,11 @@
 <?php
+ini_set('include_path', ini_get('include_path') .':/home/cairo/Workspace/phpburn/app');
 require_once('config.php');
 require_once('phpBurn.php');
 
 $config = new PhpBURN_Configuration($thisConfig);
 
+#Alem do ORM lançar biblioteca funcional
 PhpBURN::import('webinsys.Teste','webinsys.subpackage.Teste2');
 
 //$teste = new Teste();

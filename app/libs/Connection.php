@@ -1,7 +1,10 @@
 <?php
-class PhpBURN_Connection
-{
+class PhpBURN_Connection {
 	private static $connections = array();
+	
+	private function PhpBURN_Connection() {
+		return false;
+	}
 	
 	public function create(PhpBURN_ConfigurationItem $config) {
 		$conn = $this->getConnection($config->dialect);
@@ -14,15 +17,15 @@ class PhpBURN_Connection
 			if(PhpBURN::load("Connection.$config->dialect") != "error") {
 				$className = $this->getConnectionClass($config->dialect);
 				$connectionClass = new $className;
-				
+
 				$connectionClass->setHost($config->host);
 				$connectionClass->setPort($config->port);
 				$connectionClass->setUser($config->user);
 				$connectionClass->setPassword($config->password);
 				$connectionClass->setDatabase($config->database);
-				
+
 				//$connectionClass->setOptions($config->options);
-				
+
 				$conn = self::$connections[$config->package] = $connectionClass;
 				
 			} else {
@@ -34,16 +37,17 @@ class PhpBURN_Connection
 	}
 	
 	public function getConnection($package = null) {
-		if(!isset(self::$connections[$package])) {
-			return false;
-		} else {
+		if (isset($package))
 			return self::$connections[$package];
+		else {
+			PhpBURN::load('Configuration');
+			$configObj = PhpBURN_Configuration::$options['packages'][$package];
+			self::create($configObj);
 		}
 	}
 	
 	private function getConnectionClass($dialect = null) {
 		$dialect = $dialect = null ? "MySQL" : $dialect;
-		
 		return "PhpBURN_Connection_$dialect";
 	}
 }
