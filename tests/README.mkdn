@@ -1,0 +1,7 @@
+# Add a new test in AllTests
+
+To add a new test in AllTests is necessary that you open AllTests.php and add in $files array '$path ."File'sName.php'"'
+
+To run all tests run follow comand:
+
+	phpunit AllTests.php
