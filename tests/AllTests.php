@@ -8,7 +8,7 @@ require_once 'PHPUnit/Framework.php';
 class AllTests {
 	public static function suite() {
 		$suite = new PHPUnit_Framework_TestSuite();
-		$path = dirname(__FILE__);
+		$path = dirname(__FILE__) ."/";
 		$files = array(
 			$path ."ConfigTest.php",
 			$path ."PhpburnConfigurationTest.php",
