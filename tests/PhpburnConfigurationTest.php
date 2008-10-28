@@ -46,5 +46,9 @@ class PhpburnConfigurationTest extends PHPUnit_Framework_TestCase {
 		$config = new PhpBURN_Configuration($this->config);
 		$this->assertFalse($config->getConfig("worry"));
 	}
+	function testGetFirstPackage() {
+		$config = new PhpBURN_Configuration($this->config);
+		$this->assertType('PhpBURN_ConfigurationItem', $config->getConfig("first"));
+	}
 }
 ?>

@@ -63,7 +63,7 @@ class PhpBURN_Configuration {
 			self::$packages[$key] = new PhpBURN_ConfigurationItem($key,$value,$options);
 		}
 	}
-	
+
 	public static function getPackages() {
 		return self::$packages;
 	}
@@ -72,9 +72,15 @@ class PhpBURN_Configuration {
 		if ($package == null)
 			return self::getPackages();
 		else
+			if ($package == 'first') {
+				$packages = self::$packages;
+				$firstPackage = array_shift($packages);
+				unset($packages);
+				return $firstPackage;
+			}
+				
 			if (isset(self::$packages[$package]))
 				return self::$packages[$package];
-
 		return false;
 	}
 }

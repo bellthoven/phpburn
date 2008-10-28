@@ -4,7 +4,7 @@ require_once '../app/phpBurn.php';
 require_once '../app/libs/Connection.php';
 class PhpburnConnectionTest extends PHPUnit_Framework_TestCase {
 	function setUp() {
-		$config = array(
+		$this->config = array(
 		'dialect' => 'MySQL',
 		'database' => 'phpburn_test',
 		'user' => 'phpburn',
@@ -23,16 +23,21 @@ class PhpburnConnectionTest extends PHPUnit_Framework_TestCase {
 				'class_path' => '/home/models/phpburn/',
 				'port' => '3000'
 			),
-			'newmodel',
 		)
 		);
-		$this->configObj = new PhpBURN_Configuration($config);
 	}
 	function testIfExistsStaticAttributeCaledConecctionsInConnectionClass() {
 		$this->assertClassHasStaticAttribute('connections', 'PhpBURN_Connection');
 	}
-	function testIfCanGetPhpburnConnection() {
-		$this->assertType('PhpBURN_Connection', PhpBURN_Connection::getConnection());
+	function testIfExistsOnlyPhpburnConnectionInStaticAttributesConnections() {
+		$configObj = new PhpBURN_Configuration($this->config);
+		PhpBURN_Connection::create(PhpBURN_Configuration::getConfig('first'));
+		$this->assertContainsOnly('PhpBURN_Connection_MySQL', PhpBURN_Connection::getAllConnections());
+	}
+	function testIfCanGetPhpburnMysqlConnection() {
+		$configObj = new PhpBURN_Configuration($this->config);
+		$conn = PhpBURN_Connection::create(PhpBURN_Configuration::getConfig('first'));
+		$this->assertType('PhpBURN_Connection_MySQL', PhpBURN_Connection::getConnection());
 	}
 }
 ?>
