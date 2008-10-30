@@ -9,42 +9,25 @@ abstract class PhpBURN_Core implements IPhpBurn {
 	const ONE_TO_MANY = 2;
 	const MANY_TO_MANY = 3;
 	
-	protected $_connObj = null;
-	public  $_mapObj = null;
-	protected $_dialectObj = null;
+	protected $connection = null;
+	protected $dialect = null;
 	
-	/**
-	 * This is an automatic configuration when a model inherit another PhpBURN Model
-	 * than the model will use two or more mapItens. 
-	 * @example class MyNewModel extends ParentModel {
-	 * @example	
-	 * @example }
-	 * 
-	 * @example class ParentModel extends PhpBURN_Core {
-	 * @example	
-	 * @example }
-	 * 
-	 * @var Boolean
-	 */
-	public $_multiMap = false;
-	
-	public function __construct() {
-		if(!isset($this->_tablename) || !isset($this->_package)) {
+	public function PhpBURN_Core() {
+		if(!isset($this->tablename) || !isset($this->package)) {
 			throw new PhpBURN_Exeption(PhpBURN_Message::EMPTY_PACKAGEORTABLE);
 		}
 		
 		//Mapping the object
 		$mappingManager = new PhpBURN_Mapping();
 		$mappingManager->create($this);
-		
+
 		//Setting Up the connection Obj
-		$connManager = new PhpBURN_Connection();
-		$this->_connObj = clone $connManager->create(PhpBURN_Configuration::getConfig($this->_package));
+		$this->connection = PhpBURN_Connection::create(PhpBURN_Configuration::getConfig($this->package));
 		
 		//Setting Up the dialect Obj
 		//TODO Organizar a seleção do dialeto
 		$dialectManager = new PhpBURN_Dialect();
-		$this->_dialectObj = clone $dialectManager->create(PhpBURN_Configuration::getConfig($this->_package),$this);
+		$this->dialect = clone $dialectManager->create(PhpBURN_Configuration::getConfig($this->package),$this);
 	}
 	
 	public function __destruct() {
@@ -56,7 +39,6 @@ abstract class PhpBURN_Core implements IPhpBurn {
 	}
 
 	public function find($sql) {
-		
 	}
 	
 	public function fetch() {
@@ -79,6 +61,20 @@ abstract class PhpBURN_Core implements IPhpBurn {
 	
 	public function delete() {
 		
+	}
+	
+	public function getMap() {
+		return PhpBURN_Mapping::getMapping(get_class($this));
+	}
+#	addField($name, $column, $type, $length, array $options) {
+	public function hasAttribute($attribute, $type, $length = null) {
+		switch($type) {
+			case 'string':
+				if (!isset($length))
+					$length = 255;
+				PhpBURN_Mapping::getMapping(get_class($this))->addField($attribute, $attribute, 'varchar', $length, array());
+				break;
+		}
 	}
 }
 ?>

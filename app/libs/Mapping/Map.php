@@ -27,17 +27,8 @@ class PhpBURN_Map implements IMap {
 	 */	
 	public $fields = array();
 	
-	/**
-	 * Our reference to $modelObj
-	 *
-	 * @var unknown_type
-	 */
-	public $modelObj = null;
-	
-	public function __construct(PhpBURN_Core $modelObj){
-		$this->modelObj = $modelObj;
-
-		//$this->mapThis($this->modelObj);
+	function PhpBURN_Map($model) {
+		$this->mapThis($model);
 	}
 	
 	public function reset() {
@@ -46,19 +37,18 @@ class PhpBURN_Map implements IMap {
 		}
 	}
 	
-	/**
+	/**$fields
 	 * Starts a mapping for the model checking if has a XML mapping or if it uses
 	 * a coded mapping.
 	 *
 	 * @param PhpBURN_Core $modelObj
 	 */
-	public function mapThis() {
+	protected function mapThis(PhpBURN_Core $modelObj) {
 		$xmlMap = $this->getXmlMap($this->modelObj);
-		
 		if($xmlMap == true) {
 			$this->mapFromXML($xmlMap);
 		} else {
-			$this->mapFromCode();
+			$this->mapFromCode($modelObj);
 		}
 	}
 	
@@ -80,7 +70,7 @@ class PhpBURN_Map implements IMap {
 					$options['pk'] = (string)$xmlAttribute->attributes()->pk;
 					$options['defaultvalue'] = (string)$xmlAttribute->attributes()->defaultvalue;
 					
-					$this->addField((string)$xmlAttribute->attributes()->name,(string)$xmlAttribute->attributes()->column,(string)$xmlAttribute->attributes()->datatype,(string)$xmlAttribute->attributes()->lenght,$options);
+					$this->addField((string)$xmlAttribute->attributes()->name,(string)$xmlAttribute->attributes()->column,(string)$xmlAttribute->attributes()->datatype,(string)$xmlAttribute->attributes()->length,$options);
 				break;
 				//Setup a relationship
 				case 'relationship':
@@ -129,8 +119,9 @@ class PhpBURN_Map implements IMap {
 	/**
 	 * This maps the model based on its _objectMap() function
 	 */
-	public function mapFromCode() {
-		$this->modelObj->_mapping();
+	public function mapFromCode(PhpBURN_Core $model) {
+		$model->_mapping();
+		return true;
 	}
 	
 	/**
@@ -201,7 +192,7 @@ class PhpBURN_Map implements IMap {
 	 * @param String $range
 	 * @param Array $options
 	 */
-	public function addField($name, $column, $type, $length, array $options) {
+	public function addField($name, $column, $type, $length, array $options) { 
 		//Check for duplicated columns in this map
 		array_walk_recursive($this->fields,array($this, 'checkColumns'),$name);
 		
@@ -243,8 +234,8 @@ class PhpBURN_Map implements IMap {
 	 *
 	 * @param String $fieldName
 	 */
-	public function getFieldInfo($fieldName){
-		
+	public function getFieldInfo($name){
+		return $this->fields[$name];
 	}
 	
 	/**
@@ -302,6 +293,10 @@ class PhpBURN_Map implements IMap {
 		}
 		
 		return $configXML;
+	}
+	
+	public function getAllMaps() {
+		return $this->fields;
 	}
 }
 ?>

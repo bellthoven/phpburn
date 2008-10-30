@@ -1,8 +1,7 @@
 <?php
 PhpBURN::load('Mapping.Map');
 
-class PhpBURN_Mapping
-{
+class PhpBURN_Mapping {
 	private static $mapping = array();
 	
 	/**
@@ -12,52 +11,22 @@ class PhpBURN_Mapping
 	 * @param PhpBURN_Core $modelObj
 	 * @return unknown
 	 */
-	public function create(PhpBURN_Core $modelObj,$fromMulti = false) {		
-		$mapObj = $this->getMapping(get_class($modelObj));
-		
-		if($mapObj == null) {
-			
-			$mapObj = new PhpBURN_Map($modelObj);
-			$this->addMap($modelObj,$mapObj);
-			
-			//Check for parentMaps ( inhirit )
-			$parentMaps = $this->cascadeMaps(get_class($modelObj));
-			
-			if(count($parentMaps) > 0 && $fromMulti != false) {	
-				//Prepare multi-map item
-				$modelObj->_multiMap = true;
-				$mapObj = $this->addMultiMap($parentMaps,$modelObj,$mapObj);
-			}
-			
-			//Here we clone because it is the first model, we cant use the base object as map because we can have troubles with references and stored data
-			$mapObj = clone $mapObj;
-			
-			//Here we just set our already cloned $mapObj
-			$modelObj->_mapObj = $mapObj;
-			
-			//Makes the mapping into the object
-			//NOTE This must to be here because the _mapping() method into the Model
-			$modelObj->_mapObj->mapThis();
-		} else {
-			$mapObj = clone $mapObj;
-			$mapObj->modelObj = $modelObj;
-			$mapObj->reset();		
-			
-			//Here we just set our already cloned $mapObj
-			$modelObj->_mapObj = $mapObj;
+	public function create(PhpBURN_Core $model) {
+		$map = $this->getMapping(get_class($model));
+		if (!($map instanceof PhpBURN_Map)) {
+			$map = new PhpBURN_Map($model);
+			$this->addMap($model, $map);
 		}
-		
-		return $mapObj;
 	}
-	
+
 	/**
 	 * Add a new map to mapList
 	 *
 	 * @param PhpBURN_Core $modelObj
 	 * @param PhpBURN_Map $mapObj
 	 */
-	public function addMap(PhpBURN_Core $modelObj,PhpBURN_Map $mapObj) {
-		self::$mapping[get_class($modelObj)] = $mapObj;
+	public function addMap(PhpBURN_Core $model, PhpBURN_Map $map) {
+		self::$mapping[get_class($model)] = clone $map;
 	}
 	
 	/**
@@ -77,12 +46,11 @@ class PhpBURN_Mapping
 	 * @param PhpBURN_Core $modelObj
 	 * @return PhpBURN_Map
 	 */
-	public function getMapping($className) {
+	public static function getMapping($className) {
 		if(self::$mapping[$className] != null && self::$mapping[$className] != '') {
 			return self::$mapping[$className];
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	/**

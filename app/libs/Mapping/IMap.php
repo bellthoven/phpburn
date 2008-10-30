@@ -4,8 +4,6 @@
  */
 interface IMap {
 
-	public function __construct(PhpBURN_Core $model);
-	
 	/**
 	 * This method gets all mapinfo from a filed
 	 *

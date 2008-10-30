@@ -12,7 +12,8 @@ class AllTests {
 		$files = array(
 			$path ."ConfigTest.php",
 			$path ."PhpburnConfigurationTest.php",
-			$path ."PhpburnConnectionTest.php"
+			$path ."PhpburnConnectionTest.php",
+			$path ."MappingTest.php",
 		);
 		$suite->addTestFiles($files);
 		return $suite;

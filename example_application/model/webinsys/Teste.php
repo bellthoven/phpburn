@@ -1,13 +1,17 @@
 <?php
 class Teste extends PhpBURN_Core {
-	public $_package = 'webinsys';
-	public $_tablename = 'users';
+	public $package = 'webinsys';
+	public $tablename = 'users';
 	
 	public $id;
 	public $login;
 	public $pass;
 	public $status;
 	public $created;
+	
+	function Teste() {
+		parent::PhpBURN_Core();
+	}
 	
 	/**
 	 * Here we setup all mapping fields without user XML
@@ -19,7 +23,7 @@ class Teste extends PhpBURN_Core {
 	 * @example $this->_mapObj->addField('id','user_id','int','10',array('notnull' => true, 'pk' => true, 'autoincrement' => true);
 	 */
 	public function _mapping() {
-		//Setup your mapping here if you DO NOT have a xml Map
+		
 	}
 }
 ?>
