@@ -295,7 +295,13 @@ class PhpBURN_Map implements IMap {
 	public function addParentRelationShip() {
 		
 	}
-	
+
+        /**
+         * Create a reference to a parent field
+         *
+         * @param String $name
+         * @return PhpBURN_Map
+         */
 	public function addParentField($name) {
 		$parentClass = get_parent_class($this->modelObj);
 		$relName = '__PhpBURN_Extended_'.$parentClass;
@@ -378,6 +384,8 @@ class PhpBURN_Map implements IMap {
 	 * @param String $type
 	 * @param String $range
 	 * @param Array $options
+         *
+         * @return PhpBURN_Map
 	 */
 	public function addField($name, $column, $type, $length, array $options) {
 			$parentClass = get_parent_class($this->modelObj);
