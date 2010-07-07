@@ -163,7 +163,7 @@ class PhpBURN_Message {
 			throw new Exception($message);
 		}
 
-		unset($time,$usage, $message,$translatedType);
+		unset($time,$usage, $message);
 
 	}
 
