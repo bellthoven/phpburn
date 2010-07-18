@@ -80,8 +80,12 @@ abstract class PhpBURN_Core implements IPhpBurn {
 	 * PHP magic method that automaticaly executes when a new instance of this class is been created
 	 * Also here we configure the basics for the well work of PhpBURN Models
 	 */
-	public function __construct() {
-		if(!isset($this->_tablename) || !isset($this->_package)) {
+	public function __construct($tablename = null, $package = null) {
+
+                $this->_tablename = isset($this->_tablename) ? $this->_tablename : $tablename;
+                $this->_package = isset($this->_package) ? $this->_package : $package;
+
+		if(empty($this->_tablename) || empty($this->_package)) {
 			throw new PhpBURN_Exeption(PhpBURN_Message::EMPTY_PACKAGEORTABLE);
 		}
 
@@ -176,10 +180,14 @@ abstract class PhpBURN_Core implements IPhpBurn {
 	 * This method resets the fields at the model ( CLEAR ALL FIELDS )
 	 */
 	public function reset() {
-		$this->getMap()->reset();
-                $this->_orderBy = $this->_select = $this->_where = $this->_groupBy = array();
-//                unset($this->_orderBy, $this->_select, $this->_where, $this->_groupBy);
-                unset($this->getDialect()->dataSet, $this->getDialect()->resultSet);
+//          Reset MapFields values
+            $this->getMap()->reset();
+
+//          Reset Model Conditions
+            $this->_orderBy = $this->_select = $this->_where = $this->_limit = $this->_groupBy = array();
+
+//          Reset Dialect values
+            $this->getDialect()->reset();
 	}
 
 	public function _moveNext() {
@@ -565,42 +573,19 @@ abstract class PhpBURN_Core implements IPhpBurn {
 	 * @return PhpBURN_Core
 	 */
 	public function fetch() {
-
-		if($this->getDialect()->getPointer() == 0 && !$this->getDialect()->dataExists($this->getDialect()->getPointer())) {
-
-		} else {
-			$this->getDialect()->moveNext();
-		}
-
 		$result = $this->getDialect()->fetch();
-		if ($result) {
+
+                if ($result) {
 //			Clean old data
 			$this->getMap()->reset();
 			foreach ($result as $key => $value) {
 				$this->getMap()->setFieldValue($key,$value);
 			}
-			//$this->getDialect()->moveNext();
 
-			/* Parent Referecences
-//			@TODO Klederson's note: I`m thinking about a way to generalize and use left join at same time with same cascading effect we have using relationShip
-			$parentClass = get_parent_class($this);
-
-			if($parentClass != 'PhpBURN_Core') {
-				$linkName = '__PhpBURN_Extended_'.$parentClass;
-				$this->_getLink($linkName);
-				$this->$linkName->fetch();
-
-				$subResult = $this->$linkName->getMap()->fields;
-
-				foreach ($subResult as $key => $value) {
-					$this->getMap()->setFieldValue($key,$value['#value']);
-				}
-			}
-			*/
+                        $this->getDialect()->moveNext();
 
                         return $this;
 		}
-
 		return $result;
 	}
 
